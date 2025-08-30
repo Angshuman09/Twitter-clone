@@ -7,7 +7,9 @@ route.post('/signup',signup)
 
 route.post('/login',login)
 
-route.get('/get',logout)
+route.post('/logout', logout);
+
+// route.get('/get',getData)
 
 
 export default route;

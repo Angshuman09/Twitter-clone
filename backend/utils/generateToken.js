@@ -10,9 +10,9 @@ export const  generateTokenAndSetCookie= (userId, res)=>{
     }
 
     res.cookie("token",token,{
-        httpOnly:true,
+        httpOnly:true, //xss attack
         secure: process.env.NODE_ENV !== 'development',
-        sameSite : "strict",
+        sameSite : "strict", //csrf attack
         maxAge: 15*24*60*60*60*1000
     })
 }

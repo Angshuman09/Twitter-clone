@@ -1,8 +1,10 @@
 import { User } from "../models/user.model.js";
 import bcrypt from 'bcryptjs'
+import { generateTokenAndSetCookie } from "../utils/generateToken.js";
 export const signup = async (req,res)=>{
     try {
-        const {username, email, password, fullName} =req.body;
+        console.log(req.body);
+        const {username, email, password, fullName} = req.body;
     
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if(!emailRegex.test(email)){
@@ -47,14 +49,49 @@ export const signup = async (req,res)=>{
         }
     } catch (error) {
         console.log("error in signup:",error.message);
-        res.status(500).json({success:false, message:"error in signup"});
+        res.status(500).json({success:false, message:`error in signup:${error.message}`});
     }
 }
 
 export const login = async (req,res)=>{
-    res.json({message:"login done"});
+    try {
+        const {username, password} = req.body;
+
+        const user = await User.findOne({username});
+
+        const checkpassword = await bcrypt.compare(password, user?.password || "");
+
+        if(!user || !checkpassword ){
+            return res.status(400).json({success:false, message:"user not found"});
+        }
+
+        generateTokenAndSetCookie(user, res);
+
+        return res.status(200).json({
+            username:newUser.username,
+            fullName:newUser.fullName,
+            email:newUser.email,
+            followers:newUser.followers,
+            following:newUser.following,
+            profileImg:newUser.profileImg,
+            coverImg:newUser.coverImg
+          })
+    } catch (error) {
+        console.log("error in login:",error.message);
+        res.status(500).json({success:false, message:"error in signup"});
+    }
 }
 
 export const logout= async (req,res)=>{
-    res.json({message:"logout done"});
+    try {
+        res.cookie("token","",{maxAge:0});
+        res.status(200).json({success:true, message:"logut successful"});
+    } catch (error) {
+        console.log("error in logout:",error.message);
+        res.status(500).json({success:false, message:"error in signup"});
+    }
+}
+
+export const getData = async (req, res)=>{
+
 }
