@@ -68,17 +68,17 @@ export const login = async (req,res)=>{
         generateTokenAndSetCookie(user, res);
 
         return res.status(200).json({
-            username:newUser.username,
-            fullName:newUser.fullName,
-            email:newUser.email,
-            followers:newUser.followers,
-            following:newUser.following,
-            profileImg:newUser.profileImg,
-            coverImg:newUser.coverImg
+            username:user.username,
+            fullName:user.fullName,
+            email:user.email,
+            followers:user.followers,
+            following:user.following,
+            profileImg:user.profileImg,
+            coverImg:user.coverImg
           })
     } catch (error) {
-        console.log("error in login:",error.message);
-        res.status(500).json({success:false, message:"error in signup"});
+        console.log(`error in login: ${error}`,error.message);
+        res.status(500).json({success:false, message:`error in login: ${error}`});
     }
 }
 
@@ -88,10 +88,17 @@ export const logout= async (req,res)=>{
         res.status(200).json({success:true, message:"logut successful"});
     } catch (error) {
         console.log("error in logout:",error.message);
-        res.status(500).json({success:false, message:"error in signup"});
+        res.status(500).json({success:false, message:"error in logout"});
     }
 }
 
 export const getData = async (req, res)=>{
+    try {
+        const user = await User.findById(req.user._id).select("-password");
+        return res.status(200).json({success:true, message:"user data get successful"});
 
+    } catch (error) {
+        console.log("error in getData controller:",error.message);
+        res.status(500).json({success:false, message:"error in getData controller"});
+    }
 }
