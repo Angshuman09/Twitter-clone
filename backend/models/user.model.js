@@ -33,13 +33,22 @@ const UserSchema = new mongoose.Schema(
     ],
 
     profileImg:{
-        type:String,
-        default:""
+        url:String,
+        public_id: String
     },
     coverImg:{
-        type:String,
-        default:"",
-    }
+        url:String,
+        public_id: String
+    },
+
+    bio:{
+      type: String,
+      default: ""
+    },
+    link:{
+      type: String,
+      default: ""
+    },
   },
   { timestamps: true }
 );

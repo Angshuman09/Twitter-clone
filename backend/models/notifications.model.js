@@ -1,6 +1,6 @@
 import mongoose, { model } from "mongoose";
 
-export const NotificationSchema = new mongoose.Schema({
+const NotificationSchema = new mongoose.Schema({
     from:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
