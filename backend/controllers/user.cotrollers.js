@@ -27,7 +27,7 @@ export const followUnfollowUser = async (req, res)=>{
 
     try {
         const userToModify = await User.findById(id);
-        const currUser = await User.findById(req.user._id);
+        const currUser = await User.findById(req.user._id.toString());
     
         if(id === req.user._id.toString()){
             return res.status(400).json({success:false, message: "you can't follow/unfollow same user"});
@@ -67,7 +67,7 @@ export const followUnfollowUser = async (req, res)=>{
 
 export const getSuggestedUsers = async (req, res)=>{
     try {
-        const userId = req.user._id;
+        const userId = req.user._id.toString();
 
         const usersFollowedByMe = await User.findById(userId).select("following");
 
@@ -105,14 +105,14 @@ export const getSuggestedUsers = async (req, res)=>{
 
 
 export const updateUser = async (req, res)=>{
-    const {username, fullName, currentPassword, newPassword, bio, link} = req.body;
+    const {username, email, fullName, currentPassword, newPassword, bio, link} = req.body;
 
     const {profilePic, coverImg} = req.body;
 
-    const userId = req.user._id;
+    const userId = req.user._id.toString();
 
     try {
-        const user = await User.findById(userId);
+        let user = await User.findById(userId);
         if(!user) return res.status(404).json({error: "user is not found"});
 
         
@@ -120,6 +120,8 @@ export const updateUser = async (req, res)=>{
             const isMatched = await bcrypt.compare(currentPassword, user.password);
             
             if(!isMatched) return res.status(400).json({error: "current password is not matched"});
+
+            if(newPassword.length<6) return res.status(400).json({error: "password must be atleast of 6 characters"});
             
             const salt = await bcrypt.genSalt(10);
             
@@ -158,14 +160,22 @@ export const updateUser = async (req, res)=>{
         }
     }
 
+    if(email){
+         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if(!emailRegex.test(email)){
+            return res.status(400).json({error: "Not a valid email."});
+        }
+    }
+
     user.fullName = fullName || user.fullName;
     user.username = username || user.username;
+    user.email = email || user.email;
     user.bio = bio || user.bio;
     user.link = link || user.link;
 
     await user.save();
 
-    res.status(200).json({success: true, message: "user update successfully"});
+    res.status(200).json({user: user});
     } catch (error) {
         console.log("Error in updateUser: ",error);
 
