@@ -2,6 +2,7 @@ import express from 'express';
 import authRoutes from './routes/auth.routes.js'
 import userRoutes from './routes/user.routes.js'
 import postsRoutes from './routes/posts.routes.js'
+import notificationRoutes from './routes/notification.routes.js'
 import dotenv from 'dotenv';
 import { db } from './db/db.js';
 import cookieParser from "cookie-parser";
@@ -24,7 +25,7 @@ app.use(express.urlencoded({extended : true}));
 
 app.use('/api/auth',authRoutes);
 app.use('/api/user', userRoutes);
-// app.user('/api/notificaiton',notifi)
+app.use('/api/notification',notificationRoutes);
 app.use('/api/posts', postsRoutes);
 
 app.listen(port,()=>{
