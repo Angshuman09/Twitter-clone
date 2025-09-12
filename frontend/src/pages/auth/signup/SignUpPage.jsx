@@ -28,68 +28,96 @@ const SignUpPage = () => {
 	const isError = false;
 
 	return (
-		<div className='max-w-screen-xl mx-auto flex h-screen px-10'>
-			<div className='flex-1 hidden lg:flex items-center  justify-center'>
-				<XSvg className=' lg:w-2/3 fill-white' />
-			</div>
-			<div className='flex-1 flex flex-col justify-center items-center'>
-				<form className='lg:w-2/3  mx-auto md:mx-20 flex gap-4 flex-col' onSubmit={handleSubmit}>
-					<XSvg className='w-24 lg:hidden fill-white' />
-					<h1 className='text-4xl font-extrabold text-white'>Join today.</h1>
-					<label className='input input-bordered rounded flex items-center gap-2'>
-						<MdOutlineMail />
-						<input
-							type='email'
-							className='grow'
-							placeholder='Email'
-							name='email'
-							onChange={handleInputChange}
-							value={formData.email}
-						/>
-					</label>
-					<div className='flex gap-4 flex-wrap'>
-						<label className='input input-bordered rounded flex items-center gap-2 flex-1'>
-							<FaUser />
+		<div className='min-h-screen bg-black'>
+			<div className='max-w-screen-xl mx-auto flex h-screen px-10 bg-black'>
+				<div className='flex-1 hidden lg:flex items-center justify-center'>
+					<XSvg className='lg:w-2/3 fill-white' />
+				</div>
+				<div className='flex-1 flex flex-col justify-center items-center'>
+					<form className='lg:w-2/3 mx-auto md:mx-20 flex gap-4 flex-col' onSubmit={handleSubmit}>
+						<XSvg className='w-24 lg:hidden fill-white' />
+						<h1 className='text-4xl font-extrabold text-white mb-4'>Join today.</h1>
+						
+						{/* Email Input */}
+						<label className='relative'>
+							<div className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500'>
+								<MdOutlineMail size={20} />
+							</div>
 							<input
-								type='text'
-								className='grow '
-								placeholder='Username'
-								name='username'
+								type='email'
+								className='w-full bg-black border border-gray-800 rounded-md px-12 py-4 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors'
+								placeholder='Email'
+								name='email'
 								onChange={handleInputChange}
-								value={formData.username}
+								value={formData.email}
 							/>
 						</label>
-						<label className='input input-bordered rounded flex items-center gap-2 flex-1'>
-							<MdDriveFileRenameOutline />
+
+						{/* Username and Full Name Row */}
+						<div className='flex gap-4 flex-wrap'>
+							<label className='relative flex-1 min-w-[200px]'>
+								<div className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500'>
+									<FaUser size={18} />
+								</div>
+								<input
+									type='text'
+									className='w-full bg-black border border-gray-800 rounded-md px-12 py-4 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors'
+									placeholder='Username'
+									name='username'
+									onChange={handleInputChange}
+									value={formData.username}
+								/>
+							</label>
+							<label className='relative flex-1 min-w-[200px]'>
+								<div className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500'>
+									<MdDriveFileRenameOutline size={20} />
+								</div>
+								<input
+									type='text'
+									className='w-full bg-black border border-gray-800 rounded-md px-12 py-4 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors'
+									placeholder='Full Name'
+									name='fullName'
+									onChange={handleInputChange}
+									value={formData.fullName}
+								/>
+							</label>
+						</div>
+
+						{/* Password Input */}
+						<label className='relative'>
+							<div className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500'>
+								<MdPassword size={20} />
+							</div>
 							<input
-								type='text'
-								className='grow'
-								placeholder='Full Name'
-								name='fullName'
+								type='password'
+								className='w-full bg-black border border-gray-800 rounded-md px-12 py-4 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors'
+								placeholder='Password'
+								name='password'
 								onChange={handleInputChange}
-								value={formData.fullName}
+								value={formData.password}
 							/>
 						</label>
+
+						{/* Sign Up Button */}
+						<button 
+							type='submit'
+							className='w-full bg-white text-black font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition-colors mt-6'
+						>
+							Sign up
+						</button>
+						
+						{isError && <p className='text-red-500 text-center'>Something went wrong</p>}
+					</form>
+					
+					{/* Sign In Link */}
+					<div className='flex flex-col lg:w-2/3 gap-2 mt-8'>
+						<p className='text-white text-lg'>Already have an account?</p>
+						<Link to='/login'>
+							<button className='w-full bg-transparent border border-gray-600 text-white font-bold py-3 px-8 rounded-full hover:bg-gray-900 transition-colors'>
+								Sign in
+							</button>
+						</Link>
 					</div>
-					<label className='input input-bordered rounded flex items-center gap-2'>
-						<MdPassword />
-						<input
-							type='password'
-							className='grow'
-							placeholder='Password'
-							name='password'
-							onChange={handleInputChange}
-							value={formData.password}
-						/>
-					</label>
-					<button className='btn rounded-full btn-primary text-white'>Sign up</button>
-					{isError && <p className='text-red-500'>Something went wrong</p>}
-				</form>
-				<div className='flex flex-col lg:w-2/3 gap-2 mt-4'>
-					<p className='text-white text-lg'>Already have an account?</p>
-					<Link to='/login'>
-						<button className='btn rounded-full btn-primary text-white btn-outline w-full'>Sign in</button>
-					</Link>
 				</div>
 			</div>
 		</div>
