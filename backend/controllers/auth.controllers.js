@@ -16,7 +16,7 @@ export const signup = async (req,res)=>{
             return res.status(400).json({success:false, message:"username already exist"});
         }
 
-        if(password<6){
+        if(password.length<6){
             return res.status(400).json({success:false, message:"password must need atleast 6 characters long"});
         }
     
