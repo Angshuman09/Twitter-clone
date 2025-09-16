@@ -5,6 +5,8 @@ import XSvg from "../../../components/svgs/XSvg";
 
 import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
 	const [formData, setFormData] = useState({
@@ -12,16 +14,42 @@ const LoginPage = () => {
 		password: "",
 	});
 
+	const queryClient = useQueryClient();
+
+	const { mutate, isError, isPending } = useMutation({
+		mutationFn: async ({ username, password }) => {
+			try {
+				const res = await fetch('/api/auth/login', {
+					method: 'POST',
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ username, password }),
+				})
+
+				const data = await res.json();
+
+				if(!res.ok) return new Error(data.error || "Something went wrong");
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
+
+		onSuccess: ()=>{
+			toast.success("Login successful");
+			queryClient.invalidateQueries({queryKey:["authUser"]});
+		}
+	})
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(formData);
+		mutate(formData);
 	};
 
 	const handleInputChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
-
-	const isError = false;
 
 	return (
 		<div className='min-h-screen bg-black m-auto'>
@@ -45,7 +73,7 @@ const LoginPage = () => {
 								Sign in to X
 							</h1>
 						</div>
-						
+
 						{/* Form */}
 						<form className='flex flex-col gap-5' onSubmit={handleSubmit}>
 							{/* Username/Email Input */}
@@ -79,13 +107,13 @@ const LoginPage = () => {
 							</div>
 
 							{/* Sign In Button */}
-							<button 
+							<button
 								type='submit'
 								className='w-full bg-white text-black font-bold py-4 px-8 rounded-full hover:bg-gray-200 transition-colors text-lg mt-6'
 							>
-								Sign in
+								{isPending? "Loading..." : "Login"}
 							</button>
-							
+
 							{isError && <p className='text-red-500 text-center text-sm'>Something went wrong</p>}
 						</form>
 
@@ -95,7 +123,7 @@ const LoginPage = () => {
 								Forgot password?
 							</Link>
 						</div>
-						
+
 						{/* Sign Up Section */}
 						<div className='mt-10'>
 							<p className='text-gray-500 text-base mb-4'>Don't have an account?</p>
