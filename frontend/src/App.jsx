@@ -28,13 +28,15 @@ const App= ()=>{
 		retry: false
 	})
 
+	console.log(authUser);
+
 	if(isLoading) return (<div className="w-full h-screen flex justify-center items-center">
 		<LoadingSpinner size="lg"/>
 	</div>)
 
 	return (
 		<div className='flex max-w-6xl mx-auto'>
-			<Sidebar/>
+			{authUser && <Sidebar/>}
 			<Routes>
 				<Route path='/' element={authUser ? <HomePage /> : <Navigate to='/login'/>} />
 				<Route path='/signup' element={!authUser ? <SignUpPage/> : <Navigate to='/'/>} />

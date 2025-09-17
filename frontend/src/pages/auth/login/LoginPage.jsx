@@ -29,7 +29,7 @@ const LoginPage = () => {
 
 				const data = await res.json();
 
-				if(!res.ok) return new Error(data.error || "Something went wrong");
+				if(!res.ok) throw new Error(data.error || "Something went wrong");
 			} catch (error) {
 				console.log(error);
 				throw error;
@@ -39,7 +39,7 @@ const LoginPage = () => {
 		onSuccess: ()=>{
 			toast.success("Login successful");
 			queryClient.invalidateQueries({queryKey:["authUser"]});
-		}
+		},
 	})
 
 	const handleSubmit = (e) => {

@@ -14,19 +14,19 @@ const Sidebar = () => {
 	const {mutate: logout} = useMutation({
 		mutationFn: async ()=>{
 			try {
-				const res = fetch('/api/auth/logout',{
+				const res = await fetch('/api/auth/logout',{
 					method: 'POST',
 				})
 
 				const data = await res.json();
-				if(!res.ok) return new Error(data.error || "something went wrong");
+				if(!res.ok) throw new Error(data.error || "something went wrong");
 			} catch (error) {
 				throw new Error(error);
 			}
 		},
 
 		onSuccess: ()=>{
-			toast.success("Logout successful")
+			queryClient.setQueryData(['authUser'], null);
 			queryClient.invalidateQueries({queryKey: ['authUser']});
 		},
 
@@ -35,7 +35,7 @@ const Sidebar = () => {
 		}
 	});
 
-	const {data : authUser } = useQuery({queryKey:['authUser']});
+	const {data : authUser } = useQuery({queryKey:['authUser'], enabled: false});
 
 	return (
 		<div className='md:flex-[2_2_0] w-18 max-w-52'>
@@ -91,6 +91,7 @@ const Sidebar = () => {
 							<BiLogOut className='w-5 h-5 cursor-pointer' 
 							onClick={(e)=>{
 								e.preventDefault();
+								console.log("logout button clicked");
 								logout();
 							}}
 							/>
